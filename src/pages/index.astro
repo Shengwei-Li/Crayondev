@@ -6,6 +6,7 @@ import WorkList from "../components/WorkList.astro";
 import LogList from "../components/LogList.astro";
 import { getWorks } from "../data/works";
 import { catalogueNumber } from "../data/site";
+import Socials from "../components/Socials.astro";
 
 const works = await getWorks();
 const latest = works.at(-1);
@@ -16,8 +17,12 @@ const log = (await getCollection("log", ({ data }) => !data.draft))
 
 <Base>
   <section class="wrap intro">
-    <h1 class="display">I make<br />Minecraft mods.</h1>
-    <p class="lede">Other games, and things that aren't games, will turn up here as I make them.</p>
+    <h1 class="display">Mods, games<br />and other things.</h1>
+    <p class="lede">
+      Made by CrayonDev26. Right now that mostly means Minecraft; other games, and things that aren't games, will
+      turn up here as I make them.
+    </p>
+    <div class="socials"><Socials /></div>
   </section>
 
   {latest && <Feature work={latest} no={catalogueNumber(works.length - 1)} linkTitle />}
@@ -51,6 +56,9 @@ const log = (await getCollection("log", ({ data }) => !data.draft))
     margin-top: 1.5rem;
     color: var(--muted);
     font-size: 1.125rem;
+  }
+  .socials {
+    margin-top: 1.75rem;
   }
   .block {
     margin-top: 6rem;

@@ -1,0 +1,87 @@
+---
+// Profile links as a row of icons, or as a labelled list on the About page.
+// Accounts without a URL yet are shown greyed out and aren't links.
+import { socials } from "../data/site";
+
+interface Props {
+  labels?: boolean;
+  size?: number;
+}
+
+const { labels = false, size = 20 } = Astro.props;
+---
+
+<ul class:list={["socials", { labels }]}>
+  {
+    socials.map((s) => {
+      const Tag = s.href ? "a" : "span";
+      return (
+        <li>
+          <Tag
+            href={s.href ?? undefined}
+            class:list={["link", { soon: !s.href }]}
+            title={s.href ? s.name : `${s.name} (coming soon)`}
+            aria-label={labels ? undefined : s.name}
+          >
+            <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
+              <path d={s.icon.path} />
+            </svg>
+            {labels && (
+              <span>
+                {s.name}
+                {!s.href && <span class="note"> · soon</span>}
+              </span>
+            )}
+          </Tag>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 1.1rem;
+    padding: 0;
+    list-style: none;
+  }
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  a.link:hover {
+    color: var(--ink);
+  }
+  svg {
+    display: block;
+    fill: currentColor;
+  }
+  .soon {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .note {
+    font-size: 0.875rem;
+  }
+
+  .labels {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.9rem 1.5rem;
+  }
+  .labels .link {
+    color: var(--ink);
+  }
+  .labels a.link:hover span {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+  .labels .link svg {
+    color: var(--muted);
+  }
+</style>

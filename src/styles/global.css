@@ -10,6 +10,7 @@
   --sky: #c8dcef;
   --accent: #8a4f24;
   --on-accent: #fbf7f2;
+  --landscape: url("/bg/landscape-day.png");
 
   --wide: 72rem;
   --text: 38rem;
@@ -26,6 +27,7 @@
     --sky: #131926;
     --accent: #f0b43c;
     --on-accent: #1a1204;
+    --landscape: url("/bg/landscape-night.png");
   }
 }
 :root[data-theme="dark"] {
@@ -36,6 +38,7 @@
   --sky: #131926;
   --accent: #f0b43c;
   --on-accent: #1a1204;
+  --landscape: url("/bg/landscape-night.png");
 }
 
 *,
@@ -56,6 +59,25 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+/* The pixel landscape (tools/landscape.py) sits fixed along the bottom of the window, behind
+   everything. Scaled by whole numbers only, so the pixels stay square. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: -1;
+  height: 450px;
+  background: var(--landscape) repeat-x center bottom / 1920px 450px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+@media (max-width: 48rem) {
+  body::before {
+    height: 300px;
+    background-size: 1280px 300px;
+  }
 }
 
 h1,
@@ -123,7 +145,16 @@ video {
   image-rendering: pixelated;
 }
 
+/* Stepped corners, like a button drawn in pixels. */
 .button {
+  --step: 4px;
+  clip-path: polygon(
+    0 var(--step), var(--step) var(--step), var(--step) 0,
+    calc(100% - var(--step)) 0, calc(100% - var(--step)) var(--step), 100% var(--step),
+    100% calc(100% - var(--step)), calc(100% - var(--step)) calc(100% - var(--step)),
+    calc(100% - var(--step)) 100%, var(--step) 100%, var(--step) calc(100% - var(--step)),
+    0 calc(100% - var(--step))
+  );
   display: inline-block;
   padding: 0.7rem 1.1rem;
   background: var(--accent);

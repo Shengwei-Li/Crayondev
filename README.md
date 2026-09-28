@@ -21,4 +21,7 @@ pnpm deploy     # build + wrangler deploy
   `<Tooltip name="..." icon={...} lines={[...]} />`. Tones: gray, green, blue, gold, aqua, purple, white.
 - **A log entry**: add `src/content/log/<slug>.md`. See `example.md` (a draft). The Log link appears in the
   navigation once one entry is published.
-- **Site name and profile links**: `src/data/site.ts`.
+- **Profile links**: `src/data/site.ts`. An entry with `href: null` shows as a greyed-out placeholder icon;
+  paste the URL in when the account exists. Icons come from `simple-icons`.
+- **Background landscape**: `python tools/landscape.py` redraws `public/bg/landscape-{day,night}.png`.
+  Colours, seed and layout are at the top of the script.

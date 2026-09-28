@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { Image } from "astro:assets";
 import avatar from "../data/avatar.png";
-import { site } from "../data/site";
+import Socials from "../components/Socials.astro";
 ---
 
 <Base title="About" description="Who CrayonDev26 is.">
@@ -12,15 +12,13 @@ import { site } from "../data/site";
       <h1 class="display">About</h1>
       <div class="text">
         <p>
-          I'm CrayonDev26. I make Minecraft mods. The first one is <a href="/works/mountain-giant">Mountain Giant</a>, a
+          I'm CrayonDev26. I make mods, and sooner or later games and other things too. The first is <a href="/works/mountain-giant">Mountain Giant</a>, a
           28-block giant that walks the plains at night. I model and animate in Blockbench and write the code on NeoForge.
         </p>
-        <p>Other games, and things that aren't games, will end up here as I make them.</p>
-        <p>
-          Bug reports and ideas are welcome on the project pages:
-          {site.links.map((l, i) => <>{i > 0 && " or "}<a href={l.href}>{l.label}</a></>)}.
-        </p>
+        <p>Bug reports and ideas are welcome on the project pages. If something I made was worth it to you, Ko-fi keeps the lights on.</p>
       </div>
+      <h2 class="label find">Find me</h2>
+      <Socials labels />
     </div>
   </section>
 </Base>
@@ -40,6 +38,11 @@ import { site } from "../data/site";
   .text {
     margin-top: 2.5rem;
     font-size: 1.125rem;
+  }
+  .find {
+    margin: 3.5rem 0 1rem;
+    font-weight: 400;
+    letter-spacing: 0;
   }
   .text p + p {
     margin-top: 1rem;
