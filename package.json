@@ -1,0 +1,21 @@
+{
+  "name": "crayondev-website",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^8.0.2",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/pixelify-sans": "^5.3.0",
+    "astro": "^7.3.5",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.141.0"
+  }
+}

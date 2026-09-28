@@ -1,0 +1,63 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Feature from "../components/Feature.astro";
+import WorkList from "../components/WorkList.astro";
+import LogList from "../components/LogList.astro";
+import { getWorks } from "../data/works";
+import { catalogueNumber } from "../data/site";
+
+const works = await getWorks();
+const latest = works.at(-1);
+const log = (await getCollection("log", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+---
+
+<Base>
+  <section class="wrap intro">
+    <h1 class="display">I make<br />Minecraft mods.</h1>
+    <p class="lede">Other games, and things that aren't games, will turn up here as I make them.</p>
+  </section>
+
+  {latest && <Feature work={latest} no={catalogueNumber(works.length - 1)} linkTitle />}
+
+  {
+    works.length > 1 && (
+      <section class="wrap block">
+        <h2 class="label heading">All works</h2>
+        <WorkList works={works} />
+      </section>
+    )
+  }
+
+  {
+    log.length > 0 && (
+      <section class="wrap block">
+        <h2 class="label heading">Log</h2>
+        <LogList entries={log} />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .intro {
+    padding-top: clamp(3rem, 12vh, 7rem);
+    padding-bottom: clamp(2.5rem, 8vh, 5rem);
+  }
+  .lede {
+    max-width: 30rem;
+    margin-top: 1.5rem;
+    color: var(--muted);
+    font-size: 1.125rem;
+  }
+  .block {
+    margin-top: 6rem;
+  }
+  .heading {
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-bottom: 0.75rem;
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entries: CollectionEntry<"log">[];
+}
+
+const { entries } = Astro.props;
+const fmt = new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric" });
+---
+
+<ol class="list">
+  {
+    entries.map((e) => (
+      <li>
+        <a href={`/log/${e.id}`} class="row">
+          <time class="label" datetime={e.data.date.toISOString()}>{fmt.format(e.data.date)}</time>
+          <span>
+            <span class="title">{e.data.title}</span>
+            <span class="summary">{e.data.summary}</span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .list {
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1rem 0;
+    text-decoration: none;
+  }
+  .title {
+    display: block;
+    font-weight: 700;
+  }
+  .summary {
+    display: block;
+    color: var(--muted);
+  }
+  .row:hover .title {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+  @media (max-width: 48rem) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
+    }
+  }
+</style>

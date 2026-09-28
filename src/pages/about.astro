@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+import { Image } from "astro:assets";
+import avatar from "../data/avatar.png";
+import { site } from "../data/site";
+---
+
+<Base title="About" description="Who CrayonDev26 is.">
+  <section class="wrap about">
+    <Image src={avatar} alt="" width={160} densities={[1, 2]} class="pixel avatar" />
+    <div>
+      <h1 class="display">About</h1>
+      <div class="text">
+        <p>
+          I'm CrayonDev26. I make Minecraft mods. The first one is <a href="/works/mountain-giant">Mountain Giant</a>, a
+          28-block giant that walks the plains at night. I model and animate in Blockbench and write the code on NeoForge.
+        </p>
+        <p>Other games, and things that aren't games, will end up here as I make them.</p>
+        <p>
+          Bug reports and ideas are welcome on the project pages:
+          {site.links.map((l, i) => <>{i > 0 && " or "}<a href={l.href}>{l.label}</a></>)}.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, var(--text));
+    gap: 3rem;
+    padding-top: clamp(3rem, 12vh, 7rem);
+  }
+  .about :global(.avatar) {
+    width: 10rem;
+    height: auto;
+    margin-top: 0.5rem;
+  }
+  .text {
+    margin-top: 2.5rem;
+    font-size: 1.125rem;
+  }
+  .text p + p {
+    margin-top: 1rem;
+  }
+  @media (max-width: 48rem) {
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    .about :global(.avatar) {
+      width: 6rem;
+    }
+  }
+</style>

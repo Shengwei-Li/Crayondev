@@ -1,0 +1,115 @@
+---
+// A work at full width: the lead image or loop, then number, title, tagline, facts and the download.
+import type { CollectionEntry } from "astro:content";
+import DayNight from "./DayNight.astro";
+
+interface Props {
+  work: CollectionEntry<"works">;
+  no: string;
+  as?: "h1" | "h2";
+  linkTitle?: boolean;
+}
+
+const { work, no, as: Heading = "h2", linkTitle = false } = Astro.props;
+const { title, tagline, kind, facts, cover, coverNight, video, download, links } = work.data;
+const href = `/works/${work.id}`;
+---
+
+<section class="feature">
+  <div class="media">
+    {
+      video ? (
+        <video src={video} autoplay muted loop playsinline preload="metadata" aria-label={title} />
+      ) : (
+        <DayNight day={cover} night={coverNight} alt={title} eager />
+      )
+    }
+  </div>
+
+  <div class="wrap meta">
+    <p class="no label">No. {no} · {kind}</p>
+    <Heading class="title">{linkTitle ? <a href={href}>{title}</a> : title}</Heading>
+    <div class="side">
+      <p class="tagline">{tagline}</p>
+      {facts.length > 0 && <p class="facts label">{facts.join(" · ")}</p>}
+      {
+        (download || links.length > 0) && (
+          <p class="actions">
+            {download && (
+              <a class="button" href={download.href}>
+                {download.label}
+              </a>
+            )}
+            {links.map((l) => (
+              <a href={l.href}>{l.label}</a>
+            ))}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .media {
+    background: var(--sky);
+  }
+  .media :global(img),
+  .media video {
+    width: 100%;
+    height: clamp(18rem, 62vh, 44rem);
+    object-fit: cover;
+    object-position: 50% 35%;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    grid-template-areas:
+      "no no"
+      "title side";
+    column-gap: 3rem;
+    padding-top: 1.25rem;
+  }
+  .no {
+    grid-area: no;
+  }
+  .title {
+    grid-area: title;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    margin-top: 0.5rem;
+  }
+  .title a {
+    text-decoration: none;
+  }
+  .title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.1em;
+  }
+  .side {
+    grid-area: side;
+    padding-top: 0.9rem;
+  }
+  .facts {
+    margin-top: 0.75rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 48rem) {
+    .meta {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "no" "title" "side";
+    }
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import LogList from "../../components/LogList.astro";
+
+const entries = (await getCollection("log", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<Base title="Log" description="Notes on making things.">
+  <section class="wrap">
+    <h1 class="display" style="padding-top: clamp(3rem, 12vh, 7rem); margin-bottom: 3rem">Log</h1>
+    {entries.length > 0 ? <LogList entries={entries} /> : <p class="label">Nothing yet.</p>}
+  </section>
+</Base>

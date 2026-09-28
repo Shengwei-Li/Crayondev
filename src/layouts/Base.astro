@@ -1,0 +1,105 @@
+---
+import "../styles/global.css";
+import { getCollection } from "astro:content";
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : site.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// The log only shows up in the navigation once there is something in it.
+const hasLog = (await getCollection("log", ({ data }) => !data.draft)).length > 0;
+const nav = [
+  { href: "/works", label: "Works" },
+  ...(hasLog ? [{ href: "/log", label: "Log" }] : []),
+  { href: "/about", label: "About" },
+];
+const path = Astro.url.pathname.replace(/\.html$/, "");
+const current = (href: string) => path === href || path.startsWith(href + "/");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="wrap top">
+      <a href="/" class="home">{site.name}</a>
+      <nav>
+        {
+          nav.map((n) => (
+            <a href={n.href} aria-current={current(n.href) ? "page" : undefined}>
+              {n.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="wrap bottom label">
+      <span>{site.name}</span>
+      <span class="links">
+        {site.links.map((l) => <a href={l.href}>{l.label}</a>)}
+      </span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  .home {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  nav a:hover {
+    color: var(--ink);
+  }
+  nav a[aria-current="page"] {
+    color: var(--ink);
+    box-shadow: 0 2px 0 var(--accent);
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 8rem;
+    padding-bottom: 2.5rem;
+  }
+  .links {
+    display: flex;
+    gap: 1.25rem;
+  }
+</style>

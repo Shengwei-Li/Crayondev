@@ -1,0 +1,69 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Feature from "../../components/Feature.astro";
+import { getWorks } from "../../data/works";
+import { catalogueNumber } from "../../data/site";
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return works.map((work, i) => ({ params: { slug: work.id }, props: { work, no: catalogueNumber(i) } }));
+}
+
+const { work, no } = Astro.props;
+const { Content } = await render(work);
+---
+
+<Base title={work.data.title} description={work.data.tagline}>
+  <Feature work={work} no={no} as="h1" />
+  <article class="wrap prose">
+    <Content />
+  </article>
+</Base>
+
+<style>
+  .prose {
+    margin-top: 5rem;
+    font-size: 1.125rem;
+  }
+  .prose > :global(*) {
+    max-width: var(--text);
+    margin-top: 1.1rem;
+  }
+  .prose > :global(h2) {
+    margin-top: 4.5rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+  }
+  .prose :global(strong) {
+    font-weight: 700;
+  }
+  /* Images break out of the text column to the full content width. */
+  .prose > :global(p:has(> img)) {
+    max-width: none;
+    margin: 3rem 0;
+  }
+  .prose :global(img) {
+    width: 100%;
+    background: var(--sky);
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    margin-top: 2rem;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    padding: 0.55rem 1rem 0.55rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .prose :global(th) {
+    color: var(--muted);
+    font-weight: 400;
+    border-bottom-color: var(--ink);
+  }
+</style>

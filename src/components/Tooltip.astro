@@ -1,0 +1,72 @@
+---
+// An item as Minecraft shows it: the inventory slot, and the tooltip you get when you hover it.
+// The tooltip is the one place on the site that borrows the game's own look.
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import "@fontsource/pixelify-sans/400.css";
+
+type Tone = "white" | "gray" | "green" | "blue" | "gold" | "aqua" | "purple";
+type Line = string | { text: string; tone?: Tone };
+
+interface Props {
+  name: string;
+  nameTone?: Tone;
+  icon?: ImageMetadata;
+  lines?: Line[];
+}
+
+const { name, nameTone = "white", icon, lines = [] } = Astro.props;
+const norm = (l: Line) => (typeof l === "string" ? { text: l, tone: "gray" as Tone } : { tone: "gray" as Tone, ...l });
+---
+
+<figure class="item">
+  {icon && <Image src={icon} alt="" class="slot pixel" width={80} densities={[1, 2]} />}
+  <div class="tip" role="group" aria-label={name}>
+    <p class={nameTone}>{name}</p>
+    {
+      lines.map((l) => {
+        const { text, tone } = norm(l);
+        return text === "" ? <p class="gap" /> : <p class={tone}>{text}</p>;
+      })
+    }
+  </div>
+</figure>
+
+<style>
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+  .item :global(.slot) {
+    flex: none;
+    width: 4rem;
+    height: auto;
+    margin-top: 0.25rem;
+  }
+  .tip {
+    font-family: "Pixelify Sans", monospace;
+    font-size: 1rem;
+    line-height: 1.35;
+    padding: 0.5rem 0.65rem;
+    background: rgb(16 0 16 / 0.94);
+    border: 2px solid transparent;
+    border-image: linear-gradient(#5000ff, #28007f) 1;
+    box-shadow: 0 0 0 2px rgb(16 0 16 / 0.94);
+    margin: 2px;
+  }
+  .tip p {
+    text-shadow: 0.12em 0.12em 0 color-mix(in srgb, currentColor 25%, black);
+  }
+  .gap {
+    height: 0.6em;
+  }
+  .white { color: #ffffff; }
+  .gray { color: #aaaaaa; }
+  .green { color: #00aa00; }
+  .blue { color: #5555ff; }
+  .gold { color: #ffaa00; }
+  .aqua { color: #55ffff; }
+  .purple { color: #aa00aa; }
+</style>

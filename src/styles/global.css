@@ -1,0 +1,136 @@
+@import "@fontsource-variable/schibsted-grotesk";
+
+/* Day: pale stone, with the sky blue of the renders behind every image.
+   Night: the night sky from the screenshots, with the giant's eye colour as the one accent. */
+:root {
+  --bg: #f2f2ef;
+  --ink: #1c1e21;
+  --muted: #6b6f74;
+  --rule: #d9dad5;
+  --sky: #c8dcef;
+  --accent: #8a4f24;
+  --on-accent: #fbf7f2;
+
+  --wide: 72rem;
+  --text: 38rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0f14;
+    --ink: #dadde3;
+    --muted: #868c96;
+    --rule: #1f232b;
+    --sky: #131926;
+    --accent: #f0b43c;
+    --on-accent: #1a1204;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d0f14;
+  --ink: #dadde3;
+  --muted: #868c96;
+  --rule: #1f232b;
+  --sky: #131926;
+  --accent: #f0b43c;
+  --on-accent: #1a1204;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Schibsted Grotesk Variable", system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure,
+table {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--muted);
+}
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.wrap {
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* The display size: used for page titles and nothing else. */
+.display {
+  font-size: clamp(2.75rem, 9vw, 7rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.pixel {
+  image-rendering: pixelated;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.7rem 1.1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.button:hover {
+  filter: brightness(1.08);
+}

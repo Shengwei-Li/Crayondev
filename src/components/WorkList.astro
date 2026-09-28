@@ -1,0 +1,117 @@
+---
+// The catalogue: every work as one numbered row, newest first.
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import { catalogueNumber } from "../data/site";
+
+interface Props {
+  works: CollectionEntry<"works">[]; // oldest first, as numbered
+}
+
+const { works } = Astro.props;
+const rows = works.map((w, i) => ({ w, no: catalogueNumber(i) })).reverse();
+---
+
+<ol class="list">
+  {
+    rows.map(({ w, no }) => (
+      <li>
+        <a href={`/works/${w.id}`} class="row">
+          <span class="no">{no}</span>
+          <span class="icon">{w.data.icon && <Image src={w.data.icon} alt="" width={48} densities={[1, 2]} class="pixel" />}</span>
+          <span class="name">
+            <span class="title">{w.data.title}</span>
+            <span class="tagline">{w.data.tagline}</span>
+          </span>
+          <span class="kind">{w.data.kind}</span>
+          <span class="year">
+            {w.data.status === "released" ? w.data.date.getFullYear() : w.data.status}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .list {
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+  li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 3.5rem 3rem minmax(0, 1fr) 10rem 6rem;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.1rem 0;
+    text-decoration: none;
+  }
+  .no,
+  .kind,
+  .year {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+  .year {
+    text-align: right;
+  }
+  .icon :global(img) {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+  }
+  .name {
+    display: grid;
+  }
+  .title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    color: var(--muted);
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .row:hover .title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.15em;
+  }
+
+  @media (max-width: 48rem) {
+    .row {
+      grid-template-columns: 3rem minmax(0, 1fr) auto;
+      grid-template-areas:
+        "icon name year"
+        "icon kind kind";
+      row-gap: 0.1rem;
+      align-items: start;
+    }
+    .no {
+      display: none;
+    }
+    .icon {
+      grid-area: icon;
+    }
+    .name {
+      grid-area: name;
+    }
+    .kind {
+      grid-area: kind;
+    }
+    .year {
+      grid-area: year;
+    }
+    .tagline {
+      white-space: normal;
+    }
+  }
+</style>

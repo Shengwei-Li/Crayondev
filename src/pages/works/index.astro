@@ -1,0 +1,21 @@
+---
+import Base from "../../layouts/Base.astro";
+import WorkList from "../../components/WorkList.astro";
+import { getWorks } from "../../data/works";
+
+const works = await getWorks();
+---
+
+<Base title="Works" description="Everything CrayonDev26 has made, newest first.">
+  <section class="wrap">
+    <h1 class="display head">Works</h1>
+    <WorkList works={works} />
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-top: clamp(3rem, 12vh, 7rem);
+    margin-bottom: 3rem;
+  }
+</style>
