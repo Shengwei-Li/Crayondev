@@ -1,6 +1,7 @@
 {
   "name": "crayondev-website",
   "compatibility_date": "2026-09-01",
+  "routes": [{ "pattern": "crayondev26.org", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "html_handling": "drop-trailing-slash",
