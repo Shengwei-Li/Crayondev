@@ -1,0 +1,81 @@
+---
+// Day/night switch. Without a stored choice the site follows the system; a click stores the
+// opposite of what is showing now. The inline script in Base.astro applies the stored choice
+// before first paint, so there is no flash.
+
+// 12×12 pixel icons, one string per row.
+const sun = [
+  ".....#......",
+  ".#...#...#..",
+  "..#.....#...",
+  "....###.....",
+  "...#####....",
+  "##.#####.##.",
+  "...#####....",
+  "....###.....",
+  "..#.....#...",
+  ".#...#...#..",
+  ".....#......",
+  "............",
+];
+const moon = [
+  "............",
+  "....###.....",
+  "...##.......",
+  "..##........",
+  "..##........",
+  "..##........",
+  "..##........",
+  "..###.....#.",
+  "...####..##.",
+  "....#####...",
+  "............",
+  "............",
+];
+const rects = (rows: string[]) =>
+  rows.flatMap((row, y) => [...row].map((c, x) => (c === "#" ? `M${x} ${y}h1v1h-1z` : ""))).join("");
+---
+
+<button type="button" class="toggle" data-theme-toggle aria-label="Switch between day and night">
+  <svg class="only-day" viewBox="0 0 12 12" width="18" height="18" aria-hidden="true"><path d={rects(moon)} /></svg>
+  <svg class="only-night" viewBox="0 0 12 12" width="18" height="18" aria-hidden="true"><path d={rects(sun)} /></svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const isNight = () =>
+    root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+
+  for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")) {
+    const label = () => btn.setAttribute("aria-label", isNight() ? "Switch to day" : "Switch to night");
+    label();
+    btn.addEventListener("click", () => {
+      const next = isNight() ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+      label();
+    });
+  }
+</script>
+
+<style>
+  .toggle {
+    display: inline-grid;
+    place-items: center;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .toggle:hover {
+    color: var(--accent);
+  }
+  svg {
+    fill: currentColor;
+    shape-rendering: crispEdges;
+  }
+</style>

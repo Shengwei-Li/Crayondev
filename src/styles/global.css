@@ -30,7 +30,11 @@
     --landscape: url("/bg/landscape-night.png");
   }
 }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0d0f14;
   --ink: #dadde3;
   --muted: #868c96;
@@ -45,6 +49,25 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* Things that exist in one theme only (day/night images, the toggle's icon). */
+.only-night {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .only-day {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .only-night {
+    display: revert;
+  }
+}
+:root[data-theme="dark"] .only-day {
+  display: none;
+}
+:root[data-theme="dark"] .only-night {
+  display: revert;
 }
 
 html {
